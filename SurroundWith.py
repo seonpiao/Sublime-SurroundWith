@@ -32,7 +32,6 @@ add_lib_path(libs_path)
 # if you don't explicitly import jsbeautifier.unpackers here things will bomb out,
 # even though we don't use it directly.....
 import jsbeautifier, jsbeautifier.unpackers
-import merge_utils
 
 class SurroundWithCommand(sublime_plugin.TextCommand):
 	def run(self, edit, action):
@@ -58,19 +57,19 @@ class SurroundWithCommand(sublime_plugin.TextCommand):
 		if self.language == "Packages/Python/Python.tmLanguage":
 			self.insertStuff("while ${1:Condition}:", "", "while :", "", "While-Loop")
 		else:			
-			self.insertStuff("while (${1:/*Condition*/}) {", "}", "while () {", "}", "While-Loop")
+			self.insertStuff("while () {", "}", "while () {", "}", "While-Loop")
 		
 	def addfor(self):
 		if self.language == "Packages/Python/Python.tmLanguage":
 			self.insertStuff("for ${1:/*Condition*/}:", "", "for :", "", "For-Loop")
 		else:
-			self.insertStuff("for (${1:/*Condition*/}) {", "}", "for () {", "}", "For-Loop")
+			self.insertStuff("for () {", "}", "for () {", "}", "For-Loop")
 
 	def addtry(self):
 		if self.language == "Packages/Python/Python.tmLanguage":
 			self.insertStuff("try:", "except ${1:Exception}: ${2:Code to Catch}", "try:", "except :", "Try-Except-Clause")
 		else:
-			self.insertStuff("try {", "} catch (ex) {${2:/*Code to Catch*/}}", "try {", "} catch () {}", "Try-Catch-Clause")
+			self.insertStuff("try {", "} catch (ex) {}", "try {", "} catch () {}", "Try-Catch-Clause")
 
 	def adddowhile(self):
 		self.insertStuff("do {", "} while ();", "do {", "} while ();", "Do-While-Loop")
@@ -103,6 +102,7 @@ class SurroundWithCommand(sublime_plugin.TextCommand):
 			str    	= self.view.substr(sel)
 			tab    	= self.insert_start_line(sel)
 			opts = jsbeautifier.default_options()
+			opts.indent_size = 4;
 			if nSel == 1:
 				str    	= self.insert_tab_line(str)
 				str 	= str.replace('\n'+tab, '\n')
